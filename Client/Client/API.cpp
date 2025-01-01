@@ -326,6 +326,12 @@ bool markEmailAsRead(const std::string& messageId) {
     return success;
 }
 
+
+// Mail content
+// sender
+// command
+// ip_address
+// content
 bool extractData(const json rawData, json& extractData) {
     // Extract headers if available
     if (rawData["payload"].contains("headers")) {

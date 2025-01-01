@@ -347,6 +347,8 @@ bool redirect(const json& data, json& reply) {
         return false;
     }
 
+    // 
+
     // Sent email to IP location
     createReplyError(data, reply, "Can't connect to IP location!");
     return true;
@@ -356,7 +358,7 @@ bool ReadEmailContent(const json& data, json& reply) {
     std::cout << data.dump() << std::endl;
     std::string subject = "Reply: " + data["command"].get<std::string>()
         + " " + data["ip_address"].get<std::string>();
-    std::string bodypart = "";
+    std::string bodypart = data["content"];
     std::string receiver = data["sender"].get<std::string>();
     std::string filename = "";
 
@@ -368,8 +370,11 @@ bool ReadEmailContent(const json& data, json& reply) {
         // Check command
         std::string command = data["command"].get<std::string>();
         FuncPtr commandPtr = getFuncPtr(command);
-        if (!commandPtr || !commandPtr(bodypart, filename)) {
+        if (!commandPtr) {
             createReplyError(data, reply, "Unknown Command!");
+        }
+        else if (!commandPtr(bodypart, filename)) {
+            createReplyError(data, reply, "Command return false!");
         }
         else {
             std::cout << "Get server respond!\n";
