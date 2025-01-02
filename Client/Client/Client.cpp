@@ -25,7 +25,7 @@ bool checkServerOnline() {
     // Check ip address
     if (checkIPAddress(ip_address)) {
         IP_ADDRESS = ip_address.c_str();
-        std::cout << ip_address << std::endl;
+        // std::cout << ip_address << std::endl;
     }
     else {
         std::cout << "Invalid IP address!" << std::endl;
@@ -46,9 +46,6 @@ bool checkServerOnline() {
     // Execute the command and check the return status
     int status = std::system(command.c_str());
     return (status == 0); // status 0 means the ping was successful
-
-    // Create whitelist for appoviate email
-    // WHITELIST = ???
 }
 
 bool checkValidMails(const json& content) {

@@ -316,7 +316,7 @@ bool markEmailAsRead(const std::string& messageId) {
         success = false;
     }
     else {
-        std::cout << "Email marked as read successfully" << std::endl;
+        // std::cout << "Email marked as read successfully" << std::endl;
     }
 
     // Cleanup
@@ -483,7 +483,7 @@ bool getMailList(const std::string URLS, std::vector<json>& mail_array) {
             return -1;
         }
         else {
-            std::cout << "Get data successfully" << std::endl;
+            // std::cout << "Get data successfully" << std::endl;
         }
 
         // Clean up
@@ -502,7 +502,7 @@ bool getMailList(const std::string URLS, std::vector<json>& mail_array) {
         // Check if the response contains an array under a specific key, e.g., "messages"
         if (id_list.contains("messages") && id_list["messages"].is_array()) {
             std::vector<json> id_arr = id_list["messages"].get<std::vector<json>>();
-            std::cout << "Parsed JSON array into vector of JSON objects successfully." << std::endl;
+            // std::cout << "Parsed JSON array into vector of JSON objects successfully." << std::endl;
 
             for (json id_mail : id_arr) {
                 json content; getMailContent(id_mail["id"], content);
@@ -512,7 +512,7 @@ bool getMailList(const std::string URLS, std::vector<json>& mail_array) {
             }
         }
         else {
-            std::cerr << "Expected JSON array under key 'messages' but got a different structure." << std::endl;
+            // std::cerr << "Expected JSON array under key 'messages' but got a different structure." << std::endl;
             return false;
         }
     }
@@ -526,9 +526,9 @@ bool getMailList(const std::string URLS, std::vector<json>& mail_array) {
 bool getLabeledMail(std::vector<json>& emailsContent) {
     std::string urls = URLS_PREFIX +
         "/messages?q=is:unread+label:" + LABEL_NAME + "";
-    std::cout << urls << std::endl;
+    // std::cout << urls << std::endl;
     if (!getMailList(urls, emailsContent)) {
-        std::cout << "Can't read" << std::endl;
+        // std::cout << "Can't read" << std::endl;
         return false;
     }
     return true;

@@ -97,11 +97,12 @@ bool loadData() {
     
     // Load IP_ADDRESS
     if (data.contains("ip_addresses") && data["ip_addresses"].is_array()) {
-        std::cout << "IP ADDRESSES:\n";
+        std::cout << "ONLINE IP ADDRESSES:\n";
         for (const auto& ip : data["ip_addresses"]) {
             std::cout << "- " << ip << '\n';
             IP_ADDRESSES.push_back(ip.get<std::string>());
         }
+        std::cout << "- " << SERVER_IP << '\n';
     }
     else {
         std::cout << "The 'ip_addresses' field is missing or not an array.\n";
@@ -109,7 +110,7 @@ bool loadData() {
 
     // Load COMMAND_LIST
     if (data.contains("commands") && data["commands"].is_array()) {
-        std::cout << "COMMANDS:\n";
+        std::cout << "AVAILABLE COMMANDS:\n";
         for (const auto& ip : data["commands"]) {
             std::cout << "- " << ip << '\n';
             COMMAND_LIST.push_back(ip.get<std::string>());
@@ -121,7 +122,7 @@ bool loadData() {
 
     // Load USER_EMAILS
     if (data.contains("user_emails") && data["user_emails"].is_array()) {
-        std::cout << "USER EMAILS:\n";
+        std::cout << "REGISTERED USER EMAILS:\n";
         for (const auto& ip : data["user_emails"]) {
             std::cout << "- " << ip << '\n';
             USER_EMAILS.push_back(ip.get<std::string>());
@@ -130,6 +131,7 @@ bool loadData() {
     else {
         std::cout << "The 'user_emails' field is missing or not an array.\n";
     }
+
     return true;
 }
 
@@ -224,6 +226,7 @@ bool connectClient() {
     int clientAddrLen = sizeof(clientAddr);
     char buffer[BUFFER_SIZE] = { 0 };
 
+    std::cout << "\n\n";
     std::cout << "Waiting for client connection..." << std::endl;
 
     // Accept a client connection

@@ -17,6 +17,8 @@
 
 
 int main() {
+    std::cout << "##### SETTING UP SERVER SIDE #####\n";
+
     // 1. Load data
     printServerIP();
     loadData();

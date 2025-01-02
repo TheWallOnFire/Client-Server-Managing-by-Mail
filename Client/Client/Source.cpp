@@ -6,6 +6,8 @@
 
 
 int main() {
+    std::cout << "###### SETTING UP CLIENT SIDE #####\n";
+
     // 0. Check Internet connection
     if(!checkInternet()) return -1;
 
