@@ -113,6 +113,7 @@ bool getData(SOCKET clientSocket, json& reply) {
 
     // Check if the server is sending a file
     if (reply.contains("filename")) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         std::string filename = reply["filename"];
         if (filename.empty()) return true;
         filename = getFilename(filename); // Get filename from address

