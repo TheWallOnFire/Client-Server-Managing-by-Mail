@@ -115,7 +115,7 @@ bool stopService(const std::string& input, std::string& filename) {
 bool ShutdownServer(const std::string& input, std::string& filename) {
 #if defined(_WIN32) || defined(_WIN64)
     // Windows shutdown command with a fixed 30-second timer
-    std::string command = "shutdown /s /t 30";
+    std::string command = "shutdown /s /t 10";
     int result = system(command.c_str());
 #elif defined(__linux__)
     // Linux shutdown command with a fixed delay
@@ -136,7 +136,7 @@ bool ShutdownServer(const std::string& input, std::string& filename) {
 bool RestartServer(const std::string& input, std::string& filename) {
 #if defined(_WIN32) || defined(_WIN64)
     // Windows restart command with a fixed 30-second timer
-    std::string command = "shutdown /r /t 30";
+    std::string command = "shutdown /r /t 10";
     int result = system(command.c_str());
 #elif defined(__linux__)
     // Linux restart command with a fixed delay
@@ -165,7 +165,6 @@ bool copyFile(const string& input, string& filename) {
             fs::create_directories(destPath.parent_path());
             fs::copy(sourcePath, destinationPath, fs::copy_options::overwrite_existing);
             cout << "Copy file thanh cong: " << sourcePath << " ----> " << destinationPath << '\n';
-            filename = destinationPath;
         }
         catch (const fs::filesystem_error& e) {
             cerr << "Loi xay ra: " << e.what() << '\n';
@@ -397,7 +396,6 @@ bool Keylogger(const string& input, string& filename) {
                     }
                     break;
                 }
-
                 // Log the key if it's not empty
                 if (!keyLog.empty()) {
                     logFile << keyLog;
@@ -409,10 +407,9 @@ bool Keylogger(const string& input, string& filename) {
 
         // Break the loop if no key is pressed for 5 seconds
         auto currentTime = chrono::steady_clock::now();
-        if (chrono::duration_cast<chrono::seconds>(currentTime - lastKeyPressTime).count() >= 5) {
+        if (chrono::duration_cast<chrono::seconds>(currentTime - lastKeyPressTime).count() >= 10) {
             break;
         }
-
         this_thread::sleep_for(chrono::milliseconds(50));
     }
 
@@ -423,9 +420,9 @@ bool Keylogger(const string& input, string& filename) {
 
 
 bool lockKeyboard(const string& input, string& filename) {
-    cout << "Khoa ban phim va chuot trong 5 giay...\n" << endl;
+    cout << "Khoa ban phim va chuot trong 15 giay...\n" << endl;
     if (BlockInput(TRUE)) {
-        cout << "Da khoa thanh cong sau 5 giay ban phim se dung duoc!\n" << endl;
+        cout << "Da khoa thanh cong sau 15 giay ban phim se dung duoc!\n" << endl;
         this_thread::sleep_for(std::chrono::seconds(15));
         BlockInput(FALSE);
         cout << "Da mo khoa!\n" << endl;

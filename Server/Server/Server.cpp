@@ -294,6 +294,7 @@ bool sendDataToClient(SOCKET clientSocket, const json& data) {
 
     // Check if the JSON data specifies a file to send
     if (data.contains("filename")) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         std::string filename = data["filename"];
         if (!sendFile(clientSocket, filename)) {
             std::cerr << "Failed to send file: " << filename << "\n";
